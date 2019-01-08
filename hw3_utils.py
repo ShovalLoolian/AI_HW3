@@ -1,11 +1,11 @@
-data_path = r'data/Data.pickle'
+data_path = r'data/data.pickle'
 import pickle
 import numpy as np
 
 
 
 
-def load_data(path=r'data/Data.pickle'):
+def load_data(path=r'data/data.pickle'):
     '''
     return the dataset that will be used in HW 3
     prameters:
