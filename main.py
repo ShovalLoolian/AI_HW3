@@ -1,6 +1,7 @@
 import hw3_utils, classifier
 import os
 import pickle
+import csv
 
 # TODO: remove
 def load_data_try(path=r'data/data.pickle'):
@@ -41,6 +42,18 @@ def main():
     # trues = sum(list(map(lambda x: 1 if lables[x] == True else 0, dataset)))
     # print(list(map(lambda x: 1 if lables[x] == True else 0, dataset)))
     # print(trues >= 2 / 2)
+
+
+    # q. 5
+    results = []
+    with open("experiments6.csv", 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        for k in [1,3,5,7,13]:
+            factory = classifier.knn_factory(k)
+            result = classifier.evaluate(factory, 2)
+            writer.writerow([k, result[0], result[1]])
+
+
 
 
 
