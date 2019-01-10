@@ -1,7 +1,8 @@
 import hw3_utils, classifier
 import os
 import pickle
-import csv
+import csv, sklearn
+
 
 # TODO: remove
 def load_data_try(path=r'data/data.pickle'):
@@ -45,14 +46,25 @@ def main():
 
 
     # q. 5
-    results = []
-    with open("experiments6.csv", 'w', newline='') as csv_file:
-        writer = csv.writer(csv_file)
-        for k in [1,3,5,7,13]:
-            factory = classifier.knn_factory(k)
-            result = classifier.evaluate(factory, 2)
-            writer.writerow([k, result[0], result[1]])
 
+    # with open("experiments6.csv", 'w', newline='') as csv_file:
+    #     writer = csv.writer(csv_file)
+    #     for k in [1,3,5,7,13]:
+    #         factory = classifier.knn_factory(k)
+    #         result = classifier.evaluate(factory, 2)
+    #         writer.writerow([k, result[0], result[1]])
+
+    # q. 7
+
+    with open("experiments12.csv", 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        ID3_factory = classifier.ID3Factory()
+        result = classifier.evaluate(ID3_factory, 2)
+        writer.writerow([1, result[0], result[1]])
+
+        Perceptron_factory = classifier.PerceptronFactory()
+        result = classifier.evaluate(Perceptron_factory, 2)
+        writer.writerow([2, result[0], result[1]])
 
 
 

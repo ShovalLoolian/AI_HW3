@@ -1,6 +1,7 @@
 import hw3_utils
 import pickle
 import math
+from sklearn import tree, linear_model
 
 FOLD_PREFIX = "ecg_fold_"
 FOLD_SUFFIX = ".data"
@@ -59,3 +60,38 @@ class knn_factory(hw3_utils.abstract_classifier_factory):
     def train(self, data, labels):
 
         return knn_classifier(data, labels, self.k)
+
+
+class ID3Classifier(hw3_utils.abstract_classifier):
+
+    def __init__(self, tree_classifier):
+        self.tree_classifier = tree_classifier
+
+    def classify(self, features):
+        return self.tree_classifier.predict([features])
+
+
+class ID3Factory(hw3_utils.abstract_classifier_factory):
+
+    def train(self, data, labels):
+
+        classifier = tree.DecisionTreeClassifier()
+        classifier.fit(data, labels)
+        return ID3Classifier(classifier)
+
+
+class PerceptronClassifier(hw3_utils.abstract_classifier):
+
+    def __init__(self, linear_model):
+        self.linear_model = linear_model
+
+    def classify(self, features):
+        return self.linear_model.predict([features])
+
+class PerceptronFactory(hw3_utils.abstract_classifier_factory):
+
+    def train(self, data, labels):
+
+        classifier = linear_model.Perceptron()
+        classifier.fit(data, labels)
+        return PerceptronClassifier(classifier)
