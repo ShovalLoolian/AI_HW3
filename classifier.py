@@ -29,8 +29,8 @@ def evaluate(classifier_factory, k):
         features, labels = [], []
         for data in folds:
             if data != test:
-                features += [data[0]]
-                labels += [data[1]]
+                features += data[0]
+                labels += data[1]
         classifier = classifier_factory.train(features, labels)
         hits += sum([1 if classifier.classify(sample[0]) == sample[1] else 0 for sample in zip(test[0], test[1])])
     return hits / N, 1 - (hits / N)
@@ -46,7 +46,7 @@ class knn_classifier(hw3_utils.abstract_classifier):
 
     def classify(self, features):
         distances = [(euclidean_distance(self.data[i], features), i) for i in range(len(self.data))]
-        dataset = list(map(lambda x: x[1], sorted(distances, key=lambda x: x[0])[:self.k]))
+        dataset = list(map(lambda x: x[1], sorted(distances, key=lambda x: x[0])))[:self.k]
         trues = sum(list(map(lambda x: 1 if self.labels[x] == True else 0, dataset)))
         return trues >= self.k / 2
 
