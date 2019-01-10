@@ -22,13 +22,15 @@ def main():
     knn = classifier.knn_factory(3).train(train_features, train_labels)
     print(knn.classify(test_features[59]))
 
-    classifier.split_crosscheck_groups((train_features, train_labels), 2)
-    train_features, train_labels = load_data_try('ecg_fold_1.data')
-    train_features2, train_labels2 = load_data_try('ecg_fold_2.data')
-    print(sum([1 for label in train_labels if label]))
-    print(sum([1 for label in train_labels2 if label]))
-    print(sum([1 for label in train_labels if not label]))
-    print(sum([1 for label in train_labels2 if not label]))
+# create ecg_fold files:
+    # classifier.split_crosscheck_groups((train_features, train_labels), 2)
+    # train_features, train_labels = load_data_try('ecg_fold_1.data')
+    # train_features2, train_labels2 = load_data_try('ecg_fold_2.data')
+    # # train_features3, train_labels3 = load_data_try('ecg_fold_3.data')
+    # print(sum([1 for label in train_labels if label]))
+    # print(sum([1 for label in train_labels2 if label]))
+    # print(sum([1 for label in train_labels if not label]))
+    # print(sum([1 for label in train_labels2 if not label]))
 
 
     # data = [[1,1,1],[2,2,2],[100,3,3]]
