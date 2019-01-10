@@ -2,7 +2,7 @@ import hw3_utils, classifier
 import os
 import pickle
 
-
+# TODO: remove
 def load_data_try(path=r'data/data.pickle'):
     '''
     return the dataset that will be used in HW 3
