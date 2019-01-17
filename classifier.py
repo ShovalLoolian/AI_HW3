@@ -2,6 +2,7 @@ import hw3_utils
 import pickle
 import math
 from sklearn import tree, linear_model
+import numpy as np
 
 FOLD_PREFIX = "ecg_fold_"
 FOLD_SUFFIX = ".data"
@@ -10,8 +11,8 @@ def euclidean_distance(feature_set1, feature_set2):
     return sum(list(map(lambda tup: (tup[0] - tup[1]) ** 2, zip(feature_set1, feature_set2)))) ** 0.5
 
 def split_crosscheck_groups(dataset, num_folds):
-    features_indexes_true = [i for i in range(len(dataset[0])) if dataset[1][i] == True]
-    features_indexes_false = [i for i in range(len(dataset[0])) if dataset[1][i] == False]
+    features_indexes_true = np.random.permutation([i for i in range(len(dataset[0])) if dataset[1][i] == True])
+    features_indexes_false = np.random.permutation([i for i in range(len(dataset[0])) if dataset[1][i] == False])
     factor_true = math.ceil(len(features_indexes_true) / float(num_folds))
     factor_false = math.ceil(len(features_indexes_false) / float(num_folds))
 
