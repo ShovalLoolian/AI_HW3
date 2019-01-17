@@ -23,10 +23,32 @@ def load_data_try(path=r'data/data.pickle'):
 
 
 def main():
-    train_features, train_labels, test_features = hw3_utils.load_data()
-    classifier.split_crosscheck_groups((train_features, train_labels), 2)
+    # train_features, train_labels, test_features = hw3_utils.load_data()
+    # classifier.split_crosscheck_groups((train_features, train_labels), 2)
 
-    # train_featurs_final = train_features[200:]
+    # q. 5
+
+    with open("experiments6.csv", 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        for k in [1,3,5,7,13]:
+            factory = classifier.knn_factory(k)
+            result = classifier.evaluate(factory, 2)
+            writer.writerow([k, result[0], result[1]])
+
+    # q. 7
+
+    with open("experiments12.csv", 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        factory = classifier.ID3Factory()
+        result = classifier.evaluate(factory, 2)
+        writer.writerow([1, result[0], result[1]])
+
+        factory = classifier.PerceptronFactory()
+        result = classifier.evaluate(factory, 2)
+        writer.writerow([2, result[0], result[1]])
+
+
+# train_featurs_final = train_features[200:]
     # train_labels_final = train_labels[200:]
     # test_final = train_features[:200]
     # test_labels_final = train_labels[:200]
@@ -89,11 +111,7 @@ def main():
 
     # q. 5
 
-    # with open("experiments6.csv", 'w', newline='') as csv_file:
-    #     writer = csv.writer(csv_file)
-    #     for k in [1]:#,3,5,7,9,11,13]:
-    #         factory = classifier.ID3Factory()
-    #         ID3_classifier = factory.train(train_featurs_final, train_labels_final)
+
     #
     #         classifies = [ID3_classifier.classify(sample) for sample in test_final]
     #
@@ -102,7 +120,11 @@ def main():
     #
     #         true_positive = [i if classifies[i] == test_labels_final[i] and test_labels_final[i] == True else 0 for i in range(len(test_final))]
     #         true_negative = [i if classifies[i] == test_labels_final[i] and test_labels_final[i] == False else 0 for i in range(len(test_final))]
-    #
+# with open("experiments6.csv", 'w', newline='') as csv_file:
+#     writer = csv.writer(csv_file)
+#     for k in [1]:#,3,5,7,9,11,13]:
+#         factory = classifier.ID3Factory()
+#         ID3_classifier = factory.train(train_featurs_final, train_labels_final)
     #
     #
     #         # result = (res/len(test_final), 1 - (res/len(test_final)))
