@@ -20,9 +20,9 @@ def load_data_try(path=r'data/data.pickle'):
 
 
 def main():
-    # train_features, train_labels, test_features = hw3_utils.load_data()
-    # knn = classifier.knn_factory(3).train(train_features, train_labels)
-    # print(knn.classify(test_features[59]))
+    train_features, train_labels, test_features = hw3_utils.load_data()
+    knn = classifier.knn_factory(3).train(train_features, train_labels)
+    print(knn.classify(test_features[59]))
 
 # create ecg_fold files:
     # classifier.split_crosscheck_groups((train_features, train_labels), 2)
