@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 
 # TODO: remove
-def load_data_try(path=r'data/data.pickle'):
+def load_data_try(path=r'data/data.pickle')
     '''
     return the dataset that will be used in HW 3
     prameters:
