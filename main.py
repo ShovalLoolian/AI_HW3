@@ -31,21 +31,21 @@ def main():
     # sick = [train_features[i] for i in range(50) if train_labels[i] == False]
     # healthy = [train_features[i] for i in range(50) if train_labels[i] == True]
 
-    features_indexes_true = [i for i in range(len(train_features)) if train_labels[i] == True]
-    features_indexes_false = [i for i in range(len(train_features)) if train_labels[i] == False]
-    factor_true = math.ceil(len(features_indexes_true) / float(5))
-    factor_false = math.ceil(len(features_indexes_false) / float(5))
-
-    train_true = features_indexes_true[: 4 * factor_true]
-    train_false = features_indexes_false[: 4 * factor_false]
-    test_true = features_indexes_true[4 * factor_true:]
-    test_false = features_indexes_false[4 * factor_false:]
-
-    train_featurs_final = [train_features[i] for i in train_true] + [train_features[i] for i in train_false]
-    train_labels_final = [train_labels[i] for i in train_true] + [train_labels[i] for i in train_false]
-
-    test_featurs_final = [train_features[i] for i in test_true] + [train_features[i] for i in test_false]
-    test_labels_final = [train_labels[i] for i in test_true] + [train_labels[i] for i in test_false]
+    # features_indexes_true = [i for i in range(len(train_features)) if train_labels[i] == True]
+    # features_indexes_false = [i for i in range(len(train_features)) if train_labels[i] == False]
+    # factor_true = math.ceil(len(features_indexes_true) / float(5))
+    # factor_false = math.ceil(len(features_indexes_false) / float(5))
+    #
+    # train_true = features_indexes_true[: 4 * factor_true]
+    # train_false = features_indexes_false[: 4 * factor_false]
+    # test_true = features_indexes_true[4 * factor_true:]
+    # test_false = features_indexes_false[4 * factor_false:]
+    #
+    # train_featurs_final = [train_features[i] for i in train_true] + [train_features[i] for i in train_false]
+    # train_labels_final = [train_labels[i] for i in train_true] + [train_labels[i] for i in train_false]
+    #
+    # test_featurs_final = [train_features[i] for i in test_true] + [train_features[i] for i in test_false]
+    # test_labels_final = [train_labels[i] for i in test_true] + [train_labels[i] for i in test_false]
 
 
 
