@@ -95,3 +95,27 @@ class PerceptronFactory(hw3_utils.abstract_classifier_factory):
         classifier = linear_model.Perceptron()
         classifier.fit(data, labels)
         return PerceptronClassifier(classifier)
+
+
+class contestClassifier(hw3_utils.abstract_classifier):
+
+    def __init__(self, classifier_a, classifier_b, classifier_c):
+        self.a = classifier_a
+        self.b = classifier_b
+        self.c = classifier_c
+
+    def classify(self, features):
+        return sum([1 if self.a.classify(features) else 0,
+                    1 if self.b.classify(features) else 0,
+                    1 if self.c.classify(features) else 0]) > 1
+
+class contestFactory(hw3_utils.abstract_classifier_factory):
+
+    def train(self, data, labels):
+
+        a_factory = knn_factory(1)
+        b_factory = ID3Factory()
+        c_factory = PerceptronFactory()
+
+        return contestClassifier(a_factory.train(data, labels),
+                                 b_factory.train(data, labels), c_factory.train(data, labels))
