@@ -28,24 +28,24 @@ def main():
 
     # q. 5
 
-    with open("experiments6.csv", 'w', newline='') as csv_file:
-        writer = csv.writer(csv_file)
-        for k in [1,3,5,7,13]:
-            factory = classifier.knn_factory(k)
-            result = classifier.evaluate(factory, 2)
-            writer.writerow([k, result[0], result[1]])
+    # with open("experiments6.csv", 'w', newline='') as csv_file:
+    #     writer = csv.writer(csv_file)
+    #     for k in [1,3,5,7,13]:
+    #         factory = classifier.knn_factory(k)
+    #         result = classifier.evaluate(factory, 2)
+    #         writer.writerow([k, result[0], result[1]])
 
     # q. 7
 
-    with open("experiments12.csv", 'w', newline='') as csv_file:
-        writer = csv.writer(csv_file)
-        factory = classifier.ID3Factory()
-        result = classifier.evaluate(factory, 2)
-        writer.writerow([1, result[0], result[1]])
-
-        factory = classifier.PerceptronFactory()
-        result = classifier.evaluate(factory, 2)
-        writer.writerow([2, result[0], result[1]])
+    # with open("experiments12.csv", 'w', newline='') as csv_file:
+    #     writer = csv.writer(csv_file)
+    #     factory = classifier.ID3Factory()
+    #     result = classifier.evaluate(factory, 2)
+    #     writer.writerow([1, result[0], result[1]])
+    #
+    #     factory = classifier.PerceptronFactory()
+    #     result = classifier.evaluate(factory, 2)
+    #     writer.writerow([2, result[0], result[1]])
 
 
 # train_featurs_final = train_features[200:]
