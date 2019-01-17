@@ -1,6 +1,7 @@
 import hw3_utils
 import pickle
 import math
+import numpy as np
 from sklearn import tree, linear_model
 
 FOLD_PREFIX = "ecg_fold_"
@@ -10,16 +11,23 @@ def euclidean_distance(feature_set1, feature_set2):
     return sum(list(map(lambda tup: (tup[0] - tup[1]) ** 2, zip(feature_set1, feature_set2)))) ** 0.5
 
 def split_crosscheck_groups(dataset, num_folds):
-    features_indexes_true = [i for i in range(len(dataset[0])) if dataset[1][i] == True]
-    features_indexes_false = [i for i in range(len(dataset[0])) if dataset[1][i] == False]
-    factor_true = math.ceil(len(features_indexes_true) / float(num_folds))
-    factor_false = math.ceil(len(features_indexes_false) / float(num_folds))
-
+    features_indexes_true = set([i for i in range(len(dataset[0])) if dataset[1][i] == True])
+    features_indexes_false = set([i for i in range(len(dataset[0])) if dataset[1][i] == False])
+    size_true = math.ceil(len(features_indexes_true) / float(num_folds))
+    size_false = math.ceil(len(features_indexes_false) / float(num_folds))
     for i in range(num_folds):
-        dataset_true_i = features_indexes_true[i*factor_true : (i+1)*factor_true]
-        dataset_false_i = features_indexes_false[i*factor_false : (i+1)*factor_false]
+        size_true, size_false = min(size_true, len(features_indexes_true)), min(size_false, len(features_indexes_false))
+        dataset_true_i = np.random.choice(list(features_indexes_true), size_true, replace=False)
+        features_indexes_true = features_indexes_true - set(dataset_true_i)
+
+        dataset_false_i = np.random.choice(list(features_indexes_false), size_false, replace=False)
+        features_indexes_false = features_indexes_false - set(dataset_false_i)
+
         dataset_to_write = ([dataset[0][i] for i in dataset_true_i] + [dataset[0][i] for i in dataset_false_i],
                             [dataset[1][i] for i in dataset_true_i] + [dataset[1][i] for i in dataset_false_i])
+        print("size of trues " + str(i) + " is " + str(len(dataset_true_i)))
+        print("size of falses " + str(i) + " is " + str(len(dataset_false_i)))
+        print("total size " + str(i) + " is " + str(len(dataset_to_write[0])) + "\n")
         pickle.dump(dataset_to_write, open(FOLD_PREFIX + str(i+1) + FOLD_SUFFIX, 'wb'))
 
 def evaluate(classifier_factory, k):

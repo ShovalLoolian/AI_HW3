@@ -23,7 +23,10 @@ def load_data_try(path=r'data/data.pickle'):
 
 
 def main():
+    #q b.3
     train_features, train_labels, test_features = hw3_utils.load_data()
+    classifier.split_crosscheck_groups((train_features, train_labels), 8)
+
     # train_featurs_final = train_features[200:]
     # train_labels_final = train_labels[200:]
     # test_final = train_features[:200]
@@ -65,7 +68,6 @@ def main():
     # print(knn.classify(test_features[59]))
 
 # create ecg_fold files:
-#     classifier.split_crosscheck_groups((train_featurs_final, train_labels_final), 8)
     # train_features, train_labels = load_data_try('ecg_fold_1.data')
     # train_features2, train_labels2 = load_data_try('ecg_fold_2.data')
     # # train_features3, train_labels3 = load_data_try('ecg_fold_3.data')
@@ -124,14 +126,14 @@ def main():
 
     # q. 7
 
-    with open("experiments12.csv", 'w', newline='') as csv_file:
-        writer = csv.writer(csv_file)
-        factory = classifier.contestFactory()
-        contest_classifier = factory.train(train_featurs_final, train_labels_final)
-        res = sum([1 if contest_classifier.classify(test_featurs_final[i]) == test_labels_final[i] else 0 for i in
-                   range(len(test_featurs_final))])
-        result = (res/len(test_featurs_final), 1 - (res/len(test_featurs_final)))
-        writer.writerow([1, result[0], result[1]])
+    # with open("experiments12.csv", 'w', newline='') as csv_file:
+    #     writer = csv.writer(csv_file)
+    #     factory = classifier.contestFactory()
+    #     contest_classifier = factory.train(train_featurs_final, train_labels_final)
+    #     res = sum([1 if contest_classifier.classify(test_featurs_final[i]) == test_labels_final[i] else 0 for i in
+    #                range(len(test_featurs_final))])
+    #     result = (res/len(test_featurs_final), 1 - (res/len(test_featurs_final)))
+    #     writer.writerow([1, result[0], result[1]])
 
     #     Perceptron_factory = classifier.PerceptronFactory()
     #     Perceptron_classifier = Perceptron_factory.train(train_featurs_final, train_labels_final)
