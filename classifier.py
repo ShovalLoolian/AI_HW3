@@ -24,17 +24,17 @@ def split_crosscheck_groups(dataset, num_folds):
         pickle.dump(dataset_to_write, open(FOLD_PREFIX + str(i+1) + FOLD_SUFFIX, 'wb'))
 
 def evaluate(classifier_factory, k):
-    folds = [pickle.load(open(FOLD_PREFIX + str(i+1) + FOLD_SUFFIX,'rb')) for i in range(k)]
+    folds = [(i, pickle.load(open(FOLD_PREFIX + str(i+1) + FOLD_SUFFIX,'rb'))) for i in range(k)]
     hits = 0
-    N = sum(list(map(lambda x: len(x[0]), folds)))
+    N = sum(list(map(lambda x: len(x[1][0]), folds)))
     for test in folds:
         features, labels = [], []
         for data in folds:
-            if data != test:
-                features += data[0]
-                labels += data[1]
+            if data[0] != test[0]:
+                features += data[1][0]
+                labels += data[1][1]
         classifier = classifier_factory.train(features, labels)
-        hits += sum([1 if classifier.classify(sample[0]) == sample[1] else 0 for sample in zip(test[0], test[1])])
+        hits += sum([1 if classifier.classify(sample[0]) == sample[1] else 0 for sample in zip(test[1][0], test[1][1])])
     return hits / N, 1 - (hits / N)
 
 

@@ -2,6 +2,7 @@ import hw3_utils, classifier
 import os
 import pickle
 import csv, sklearn, math
+import numpy
 
 from matplotlib import pyplot as plt
 
@@ -23,7 +24,7 @@ def load_data_try(path=r'data/data.pickle'):
 
 
 def main():
-    # train_features, train_labels, test_features = hw3_utils.load_data()
+    train_features, train_labels, test_features = hw3_utils.load_data()
     # classifier.split_crosscheck_groups((train_features, train_labels), 2)
 
     # q. 5
@@ -46,6 +47,61 @@ def main():
     #     factory = classifier.PerceptronFactory()
     #     result = classifier.evaluate(factory, 2)
     #     writer.writerow([2, result[0], result[1]])
+
+    # part c
+
+    # plt.figure()
+    #
+    # sick = [train_features[i] for i in range(22) if train_labels[i] == False]
+    # healthy = [train_features[i] for i in range(4) if train_labels[i] == True]
+    # for sample in sick:
+    #     plt.plot(list(range(187)), sample, '-k')
+    #
+    # for sample in healthy:
+    #     plt.plot(list(range(187)), sample, '-r')
+    #
+    # plt.show()
+
+    # ---polynomial---
+
+    # ---create the polynomial
+    # polynomial_features = []
+    # for i in range(len(train_features)):
+    #     polynomial_features += [numpy.polynomial.polynomial.polyfit(list(range(187)), train_features[i], 4)]
+    # classifier.split_crosscheck_groups((polynomial_features, train_labels), 2)
+
+    # ---knn
+    # with open("experiments1.csv", 'w', newline='') as csv_file:
+    #     writer = csv.writer(csv_file)
+    #     for k in [1,3]:
+    #         factory = classifier.knn_factory(k)
+    #         result = classifier.evaluate(factory, 2)
+    #         writer.writerow([k, result[0], result[1]])
+
+    # ---ID3 and Perceptron
+    # with open("experiments2.csv", 'w', newline='') as csv_file:
+    #     writer = csv.writer(csv_file)
+    #     factory = classifier.ID3Factory()
+    #     result = classifier.evaluate(factory, 2)
+    #     writer.writerow([1, result[0], result[1]])
+    #
+    #     factory = classifier.PerceptronFactory()
+    #     result = classifier.evaluate(factory, 2)
+    #     writer.writerow([2, result[0], result[1]])
+
+    # ---feature selection---
+
+    with open("experiments3.csv", 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        for n in range(90,111):
+            selected_features = sklearn.feature_selection.SelectKBest(sklearn.feature_selection.mutual_info_classif, n).fit(train_features, train_labels).transform(train_features)
+            classifier.split_crosscheck_groups((selected_features, train_labels), 10)
+            factory = classifier.knn_factory(1)
+            result = classifier.evaluate(factory, 10)
+            writer.writerow([n, result[0], result[1]])
+
+    print("DONE")
+
 
 
 # train_featurs_final = train_features[200:]
