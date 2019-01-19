@@ -67,7 +67,7 @@ def main():
     # ---create the polynomial
     # polynomial_features = []
     # for i in range(len(train_features)):
-    #     polynomial_features += [numpy.polynomial.polynomial.polyfit(list(range(187)), train_features[i], 4)]
+    # polynomial_features += [numpy.polynomial.polynomial.polyfit(list(range(187)), train_features[i], 4)]
     # classifier.split_crosscheck_groups((polynomial_features, train_labels), 2)
 
     # ---knn
@@ -93,11 +93,10 @@ def main():
 
     with open("experiments3.csv", 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
-        for n in range(90,111):
-            selected_features = sklearn.feature_selection.SelectKBest(sklearn.feature_selection.mutual_info_classif, n).fit(train_features, train_labels).transform(train_features)
-            classifier.split_crosscheck_groups((selected_features, train_labels), 10)
-            factory = classifier.knn_factory(1)
-            result = classifier.evaluate(factory, 10)
+        for n in [5,10,20,100,150]:
+            selector = sklearn.feature_selection.SelectKBest(sklearn.feature_selection.mutual_info_classif, n).fit(train_features, train_labels)
+            factory = classifier.BestKFactory(selector)
+            result = classifier.evaluate(factory, 2)
             writer.writerow([n, result[0], result[1]])
 
     print("DONE")

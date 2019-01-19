@@ -98,6 +98,18 @@ class PerceptronFactory(hw3_utils.abstract_classifier_factory):
         return PerceptronClassifier(classifier)
 
 
+class BestKFactory(hw3_utils.abstract_classifier_factory):
+    def __init__(self, selector):
+        self.selector = selector
+
+    def train(self, data, labels):
+
+        modified_data = self.selector.transform(data)
+        factory = knn_factory(1)
+
+        return factory.train(modified_data, labels)
+
+
 class contestClassifier(hw3_utils.abstract_classifier):
 
     def __init__(self, classifier_a, classifier_b, classifier_c):
