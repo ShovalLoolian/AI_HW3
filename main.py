@@ -25,6 +25,7 @@ def load_data_try(path=r'data/data.pickle'):
 
 def main():
     train_features, train_labels, test_features = hw3_utils.load_data()
+    # call this only once
     # classifier.split_crosscheck_groups((train_features, train_labels), 2)
 
     # q. 5
@@ -91,13 +92,14 @@ def main():
 
     # ---feature selection---
 
-    with open("experiments3.csv", 'w', newline='') as csv_file:
+    with open("experiments5.csv", 'w', newline='') as csv_file: #change to 3, 4: split into 2 groups, 5:
         writer = csv.writer(csv_file)
-        for n in range(90,111):
+        for n in [5, 10, 20, 50, 80, 100, 115, 120, 150, 160]:
+            print("n is:" + str(n) + "\n")
             selected_features = sklearn.feature_selection.SelectKBest(sklearn.feature_selection.mutual_info_classif, n).fit(train_features, train_labels).transform(train_features)
-            classifier.split_crosscheck_groups((selected_features, train_labels), 10)
+            # classifier.split_crosscheck_groups((selected_features, train_labels), 10)
             factory = classifier.knn_factory(1)
-            result = classifier.evaluate(factory, 10)
+            result = classifier.evaluate(factory, 2)
             writer.writerow([n, result[0], result[1]])
 
     print("DONE")
