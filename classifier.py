@@ -115,7 +115,7 @@ class BestKFactory(hw3_utils.abstract_classifier_factory):
     def train(self, data, labels):
 
         modified_data = self.selector.transform(data)
-        factory = knn_factory(1)
+        factory = ID3Factory()
 
         return BestKClassifier(factory.train(modified_data, labels), self.selector)
 

@@ -91,18 +91,28 @@ def main():
 
     # ---feature selection---
 
-    with open("experiments3.csv", 'w', newline='') as csv_file:
-        writer = csv.writer(csv_file)
-        for n in [5,10,20,100,150,160]:
-            selector = sklearn.feature_selection.SelectKBest(sklearn.feature_selection.mutual_info_classif, n).fit(train_features, train_labels)
-            factory = classifier.BestKFactory(selector)
-            result = classifier.evaluate(factory, 2)
-            writer.writerow([n, result[0], result[1]])
-
-    print("DONE")
+    # with open("experiments3.csv", 'w', newline='') as csv_file:
+    #     writer = csv.writer(csv_file)
+    #     for n in [5,10,20,100,150,160]:
+    #         selector = sklearn.feature_selection.SelectKBest(sklearn.feature_selection.f_classif, n).fit(train_features, train_labels) # sklearn.feature_selection.mutual_info_classif,
+    #         factory = classifier.BestKFactory(selector)
+    #         result = classifier.evaluate(factory, 2)
+    #         writer.writerow([n, result[0], result[1]])
 
 
-
+    # remove duplications
+    duplicates = set()
+    for i in range(len(train_features)):
+        dup_for_i = set()
+        for j in range(len(train_features)):
+            if i != j and all(list(map(lambda x: x[0] == x[1],zip(list(train_features[i]), list(train_features[j]))))):
+                dup_for_i += {j}
+        if len(dup_for_i) > 0:
+            duplicates += dup_for_i + {i} if all(list(map(lambda x: train_labels[i] == train_labels[x], dup_for_i))) \
+                else dup_for_i
+    modified_data = [train_features[i] for i in range(len(train_features)) if i not in duplicates]
+    modified_labels = [train_labels[i] for i in range(len(train_features)) if i not in duplicates]
+    print("done")
 # train_featurs_final = train_features[200:]
     # train_labels_final = train_labels[200:]
     # test_final = train_features[:200]
