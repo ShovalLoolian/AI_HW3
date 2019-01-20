@@ -24,7 +24,7 @@ def load_data_try(path=r'data/data.pickle'):
 
 
 def main():
-    train_features, train_labels, test_features = hw3_utils.load_data()
+    # train_features, train_labels, test_features = hw3_utils.load_data()
     # classifier.split_crosscheck_groups((train_features, train_labels), 2)
 
     # q. 5
@@ -100,19 +100,32 @@ def main():
     #         writer.writerow([n, result[0], result[1]])
 
 
+    # test for duplications:
+    train_features = [[1,2,3],[1,2,3],[4,5,6],[1,2,3]]
+    train_labels = [True,False,True, True]
+
+
+
+
     # remove duplications
     duplicates = set()
     for i in range(len(train_features)):
         dup_for_i = set()
-        for j in range(len(train_features)):
-            if i != j and all(list(map(lambda x: x[0] == x[1],zip(list(train_features[i]), list(train_features[j]))))):
-                dup_for_i += {j}
+        for j in range(i+1, len(train_features)):
+            if all(list(map(lambda x: x[0] == x[1],zip(list(train_features[i]), list(train_features[j]))))):
+                dup_for_i.add(j)
         if len(dup_for_i) > 0:
-            duplicates += dup_for_i + {i} if all(list(map(lambda x: train_labels[i] == train_labels[x], dup_for_i))) \
-                else dup_for_i
+            if not all(list(map(lambda x: train_labels[i] == train_labels[x], dup_for_i))):
+                dup_for_i.add(i)
+            duplicates = duplicates | dup_for_i
     modified_data = [train_features[i] for i in range(len(train_features)) if i not in duplicates]
     modified_labels = [train_labels[i] for i in range(len(train_features)) if i not in duplicates]
     print("done")
+
+
+
+
+
 # train_featurs_final = train_features[200:]
     # train_labels_final = train_labels[200:]
     # test_final = train_features[:200]
