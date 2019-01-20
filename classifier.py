@@ -1,7 +1,7 @@
 import hw3_utils
 import pickle
 import math
-from sklearn import tree, linear_model
+from sklearn import tree, linear_model, ensemble
 import numpy as np
 
 FOLD_PREFIX = "ecg_fold_"
@@ -73,10 +73,12 @@ class ID3Classifier(hw3_utils.abstract_classifier):
 
 
 class ID3Factory(hw3_utils.abstract_classifier_factory):
+    def __init__(self, min_samples_split = 2):
+        self.min_samples_split = min_samples_split
 
     def train(self, data, labels):
 
-        classifier = tree.DecisionTreeClassifier()
+        classifier = tree.DecisionTreeClassifier(min_samples_split=self.min_samples_split)
         classifier.fit(data, labels)
         return ID3Classifier(classifier)
 
@@ -96,6 +98,25 @@ class PerceptronFactory(hw3_utils.abstract_classifier_factory):
         classifier = linear_model.Perceptron()
         classifier.fit(data, labels)
         return PerceptronClassifier(classifier)
+
+
+class PolynomialClassifier(hw3_utils.abstract_classifier):
+    def __init__(self, classifier):
+        self.classifier = classifier
+
+    def classify(self, features):
+        modified_data = np.polynomial.polynomial.polyfit(list(range(125)), features[:125], 4)
+        return self.classifier.classify(modified_data)
+
+
+class PolynomialFactory(hw3_utils.abstract_classifier_factory):
+
+    def train(self, data, labels):
+
+        modified_data = [np.polynomial.polynomial.polyfit(list(range(125)), data[i][:125], 4) for i in range(len(data))]
+        factory = knn_factory(1)
+
+        return PolynomialClassifier(factory.train(modified_data, labels))
 
 
 class BestKClassifier(hw3_utils.abstract_classifier):
@@ -118,6 +139,25 @@ class BestKFactory(hw3_utils.abstract_classifier_factory):
         factory = ID3Factory()
 
         return BestKClassifier(factory.train(modified_data, labels), self.selector)
+
+
+class RandomForestClassifier(hw3_utils.abstract_classifier):
+
+    def __init__(self, tree_classifier):
+        self.tree_classifier = tree_classifier
+
+    def classify(self, features):
+        return self.tree_classifier.predict([features])
+
+class RandomForestFactory(hw3_utils.abstract_classifier_factory):
+    def __init__(self, n_estimators = 10):
+        self.n_estimators = n_estimators
+
+    def train(self, data, labels):
+
+        classifier = ensemble.RandomForestClassifier(n_estimators=self.n_estimators)
+        classifier.fit(data, labels)
+        return RandomForestClassifier(classifier)
 
 
 class contestClassifier(hw3_utils.abstract_classifier):
