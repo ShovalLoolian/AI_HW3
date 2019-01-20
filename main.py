@@ -93,7 +93,7 @@ def main():
 
     with open("experiments3.csv", 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
-        for n in [5,10,20,100,150]:
+        for n in [5,10,20,100,150,160]:
             selector = sklearn.feature_selection.SelectKBest(sklearn.feature_selection.mutual_info_classif, n).fit(train_features, train_labels)
             factory = classifier.BestKFactory(selector)
             result = classifier.evaluate(factory, 2)
