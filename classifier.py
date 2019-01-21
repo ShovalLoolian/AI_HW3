@@ -34,7 +34,11 @@ def evaluate(classifier_factory, k):
                 features += data[1][0]
                 labels += data[1][1]
         classifier = classifier_factory.train(features, labels)
-        hits += sum([1 if classifier.classify(sample[0]) == sample[1] else 0 for sample in zip(test[1][0], test[1][1])])
+        for sample in zip(test[1][0], test[1][1]):
+            classified = classifier.classify(sample[0])
+            hit = classified == sample[1]
+            hits += hit
+        # hits += sum([1 if classifier.classify(sample[0]) == sample[1] else 0 for sample in zip(test[1][0], test[1][1])])
     return hits / N, 1 - (hits / N)
 
 
@@ -140,6 +144,27 @@ class BestKFactory(hw3_utils.abstract_classifier_factory):
 
         return BestKClassifier(factory.train(modified_data, labels), self.selector)
 
+class RangedClassifier(hw3_utils.abstract_classifier):
+    def __init__(self, classifier, feature_range):
+        self.classifier = classifier
+        self.feature_range = feature_range
+
+    def classify(self, features):
+        modified_data = features[self.feature_range[0]:self.feature_range[1]]
+        return self.classifier.classify(modified_data)
+
+
+class RangedFactory(hw3_utils.abstract_classifier_factory):
+    def __init__(self, feature_range):
+        self.feature_range = feature_range
+
+    def train(self, data, labels):
+
+        modified_data = [sample[self.feature_range[0]:self.feature_range[1]] for sample in data]
+        factory = knn_factory(3)
+
+        return RangedClassifier(factory.train(modified_data, labels), self.feature_range)
+
 
 class RandomForestClassifier(hw3_utils.abstract_classifier):
 
@@ -150,35 +175,36 @@ class RandomForestClassifier(hw3_utils.abstract_classifier):
         return self.tree_classifier.predict([features])
 
 class RandomForestFactory(hw3_utils.abstract_classifier_factory):
-    def __init__(self, n_estimators = 10):
+    def __init__(self, n_estimators = 10, min_samples_split = 2):
         self.n_estimators = n_estimators
+        self.min_samples_split = min_samples_split
 
     def train(self, data, labels):
 
-        classifier = ensemble.RandomForestClassifier(n_estimators=self.n_estimators)
+        classifier = ensemble.RandomForestClassifier(n_estimators=self.n_estimators,
+                                                     min_samples_split=self.min_samples_split)
         classifier.fit(data, labels)
         return RandomForestClassifier(classifier)
 
 
 class contestClassifier(hw3_utils.abstract_classifier):
 
-    def __init__(self, classifier_a, classifier_b, classifier_c):
-        self.a = classifier_a
-        self.b = classifier_b
-        self.c = classifier_c
+    def __init__(self, classifiers, weights):
+        self.classifiers = classifiers
+        self.weights = weights
 
     def classify(self, features):
-        return sum([1 if self.a.classify(features) else 0,
-                    1 if self.b.classify(features) else 0,
-                    1 if self.c.classify(features) else 0]) > 1
+        return sum(list(map(lambda x: x[0] * (1 if x[1].classify(features) else 0),
+                            zip(self.weights, self.classifiers)))) > 0.5
 
 class contestFactory(hw3_utils.abstract_classifier_factory):
 
+    def __init__(self, factories, selectors, weights):
+        self.factories = factories
+        self.selectors = selectors
+        self.weights = weights
+
     def train(self, data, labels):
 
-        a_factory = knn_factory(1)
-        b_factory = ID3Factory()
-        c_factory = PerceptronFactory()
-
-        return contestClassifier(a_factory.train(data, labels),
-                                 b_factory.train(data, labels), c_factory.train(data, labels))
+        return contestClassifier([BestKClassifier(self.factories[i].train(self.selectors[i].transform(data), labels),
+                                                  self.selectors[i]) for i in range(len(self.factories))], self.weights)
